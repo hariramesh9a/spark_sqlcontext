@@ -25,16 +25,15 @@ object LearnRDD {
   
   def filterandcount(): Unit = {
 //    using error log in resources
-    val conf=new SparkConf().setAppName("Filter and Count").setMaster("local[12]")
+    val conf=new SparkConf().setAppName("Filter and Count").setMaster("local[8]")
     val sparkcon=new SparkContext(conf)
     val errorlog=sparkcon.textFile("src/main/resources/hello.txt")
     val splitRDD=errorlog.flatMap { x => x.split(":")}
+    println(splitRDD.first().contains("error"))
+
     val words=splitRDD.filter { x => x.contains("error") }
     val countwords=words.map { (x) => (x,1) }
     val counts=countwords.reduceByKey({case(x,y)=>(x+y)}).foreach(println)
-    
-    
-
     
     //println("Number of errors: "+onlyerror.count())
     //now get key and values
